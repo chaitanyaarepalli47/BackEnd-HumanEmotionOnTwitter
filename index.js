@@ -25,4 +25,15 @@ const pool = new Pool({
 });
 module.exports = pool;
 
-// const { Pool } = require('pg');
+ReadableStreamDefaultController.get('/db',async (req,res) => {
+    try{
+        const client = await pool.connect()
+        const result = await client.query('SELECT * FROM login_details');
+        const results = {'results' : (result) ? result.rows : null};
+        res.send(JSON.stringify(results));
+        client.release();
+    }catch(err) {
+        console.error(err);
+        res.send("Error "+err);
+    }
+})
